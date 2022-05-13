@@ -24,11 +24,16 @@ public class HC1 {
             byte[] buffer = new byte[1];
             int len;
             while ((len = in.read(buffer)) > 0) {
+                // niederwertigstes bit der Zufallszahl
                 int random = BASIC.nextInt() & 0xFF;
 
+                // Result-Buffer
                 byte[] result = new byte[1];
+
+                // XOR Wert des eingelesen Bytes und des Zufallbytes
                 result[0] = (byte)((int)buffer[0] ^ random);
 
+                // In Datei schreiben
                 out.write(result, 0, len);
             }
         } catch (Exception e) {

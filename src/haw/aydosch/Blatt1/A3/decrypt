@@ -1,0 +1,34 @@
+public static void decrypt(byte[] sourceFile, byte[] target, byte[] initialisierungsVektor) {
+		byte[] curr;
+		// Plaintext buffer
+		byte[] plain;
+		// Chiffre buffer
+		byte[] cipher;
+		int offset;
+
+		// aktuelle Bytes
+		curr = encryptDecryptEncrypt(initialisierungsVektor);
+		// klartext
+		plain = new byte[8];
+		//chiffre
+		cipher = new byte[8];
+		offset = 0;
+
+		// Erhöhe nach jedem Durchlauf den Offset um 8 Bytes
+		for (int x = 0; x < sourceFile.length; x += 8) {
+			if (x + 8 > sourceFile.length - 1) {
+				offset = sourceFile.length;
+			}
+			else {
+				offset = x + 8;
+			}
+
+			cipher = Arrays.copyOfRange(target, x, offset);
+
+			// CFB XOR
+			plain = xor(curr, cipher);
+
+			System.arraycopy(plain, 0, target, x, offset - x);
+			curr = encryptDecryptEncrypt(cipher);
+		}
+	}
