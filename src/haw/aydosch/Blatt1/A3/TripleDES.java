@@ -18,7 +18,7 @@ public class TripleDES {
    
    /* encrypt plaintext block  */
    public byte[] encryptBytes (byte[] plaintextBytes){
-       byte[] resultBytes = new byte[8];
+       byte[] resultBytes = new byte[plaintextBytes.length];
 
        // encrypt (using DES1)
        this.DES1.encrypt(plaintextBytes, 0, resultBytes, 0);

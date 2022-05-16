@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 public class SecureFile {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // Parse arguments
         String fileEnDecryptFile = args[0];
         String fileKey = args[1];
@@ -45,8 +45,7 @@ public class SecureFile {
         TripleDES tdes = new TripleDES(key1, key2, key3);
 
         // Perform operation
-        if(operation.equals("encrypt")) SecureFile.encrypt(tdes, iv, src, target);
-        if(operation.equals("decrypt")) SecureFile.decrypt(tdes, iv, src, target);
+        SecureFile.encrypt(tdes, iv, src, target, operation);
 
         // Write target to result file
         try (FileOutputStream fos = new FileOutputStream(resultFile)) {
@@ -56,7 +55,7 @@ public class SecureFile {
         }
     }
 
-    private static byte[] encrypt(TripleDES tdes, byte[] iv, byte[] src, byte[] target) {
+    private static byte[] encrypt(TripleDES tdes, byte[] iv, byte[] src, byte[] target, String operation) {
         byte[] prev_c = iv;
 
         for(int i = 0; i < src.length; i+=8) {
@@ -65,9 +64,6 @@ public class SecureFile {
 
             // Calculate chiffretext
             byte[] result_c = xor(m_i, tdes.encryptBytes(prev_c));
-
-            // Update prev_c
-            prev_c = result_c;
 
             // Append to target
             for(int j = 0; j < 8; j++) {
@@ -81,34 +77,6 @@ public class SecureFile {
 
         return target;
     }
-
-    private static byte[] decrypt(TripleDES tdes, byte[] iv, byte[] src, byte[] target) {
-        byte[] prev_c = iv;
-
-        for(int i = 0; i < src.length; i+=8) {
-            // Get 8 bytes of plaintext
-            byte[] m_i = Arrays.copyOfRange(src, i, i+8);
-
-            // Calculate chiffretext
-            byte[] result_c = xor(m_i, tdes.decryptBytes(prev_c));
-
-            // Update prev_c
-            prev_c = result_c;
-
-            // Append to target
-            for(int j = 0; j < 8; j++) {
-                // Break if target length is reached (Everything above length is going to be padding)
-                if(i+j == target.length)
-                    break;
-
-                target[i+j] = result_c[j];
-            }
-        }
-
-        return target;
-    }
-
-
 
     public static byte[] xor(byte[] o1, byte[] o2) {
         byte[] temp = new byte[o1.length];
