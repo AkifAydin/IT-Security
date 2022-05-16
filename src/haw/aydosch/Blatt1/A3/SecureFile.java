@@ -65,6 +65,12 @@ public class SecureFile {
             // Calculate chiffretext
             byte[] result_c = xor(m_i, tdes.encryptBytes(prev_c));
 
+            if (operation.equals("encrypt")) {
+                prev_c = result_c;
+            } else {
+                prev_c = m_i;
+            }
+
             // Append to target
             for(int j = 0; j < 8; j++) {
                 // Break if target length is reached (Everything above length is going to be padding)

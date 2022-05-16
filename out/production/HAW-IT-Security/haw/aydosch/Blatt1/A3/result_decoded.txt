@@ -1,1 +1,0 @@
-Das hier ist Klartext, der mittels TripleDES verschlüsselt werden soll
