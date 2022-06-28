@@ -27,12 +27,11 @@ public class SSF {
 
         // a) Einlesen eines privaten RSA-Schlüssels (.prv) aus einer Datei gemäß Aufgabenteil 1.
         DataInputStream inputStreamPrivate = new DataInputStream(new FileInputStream(pathPrivateKey));
-        int nameLenght = inputStreamPrivate.readInt();
-        inputStreamPrivate.skipBytes(nameLenght);
+        int nameLength = inputStreamPrivate.readInt();
+        byte[] name = inputStreamPrivate.readNBytes(nameLength);
 
         int keyLength = inputStreamPrivate.readInt();
-        byte[] key = new byte[keyLength];
-        inputStreamPrivate.read(key);
+        byte[] key = inputStreamPrivate.readNBytes(keyLength);
         inputStreamPrivate.close();
 
         PrivateKey privateKey = kf.generatePrivate(new PKCS8EncodedKeySpec(key));
@@ -40,12 +39,11 @@ public class SSF {
 
         // b) Einlesen eines öffentlichen RSA-Schlüssels (.pub) aus einer Datei gemäß Aufgabenteil 1.
         DataInputStream inputStreamPublic = new DataInputStream(new FileInputStream(pathPublicKey));
-        int nameLenghtPublic = inputStreamPublic.readInt();
-        inputStreamPublic.skipBytes(nameLenghtPublic);
+        int nameLengthPublic = inputStreamPublic.readInt();
+        byte[] namePublic = inputStreamPublic.readNBytes(nameLengthPublic);
 
         int keyLengthPublic = inputStreamPublic.readInt();
-        byte[] keyPublic = new byte[keyLengthPublic];
-        inputStreamPublic.read(keyPublic);
+        byte[] keyPublic = inputStreamPublic.readNBytes(keyLengthPublic);
         inputStreamPublic.close();
 
         PublicKey publicKey = kf.generatePublic(new X509EncodedKeySpec(keyPublic));
